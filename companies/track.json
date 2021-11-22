@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "short-description": "Benchmarking scored/unscored queries",
+    "description": "Benchmarking scored/unscored queries",
+    "data-url": "remote-path-to-your-uploaded-data"
+  },
+  "indices": [
+    {
+      "name": "companies",
+      "types": [
+        {
+          "name": "company",
+          "mapping": "mappings.json",
+          "documents": "documents.json.bz2",
+          "document-count": 484122,
+          "compressed-bytes": 154133271,
+          "uncompressed-bytes": 11385383
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "name": "index",
+      "operation-type": "index",
+      "bulk-size": 5613
+    },
+    {
+      "name": "force-merge",
+      "operation-type": "force-merge"
+    },
+    {
+      "name": "unscored-query",
+      "operation-type": "search",
+      "body": {
+        "query": {
+          "constant_score": {
+            "filter": {
+              "bool": {
+                "must": [
+                  {
+                    "terms": {
+                      "company_name": [
+                        "limited",
+                        "ltd"
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scored-query",
+      "operation-type": "search",
+      "body": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "terms": {
+                  "company_name": [
+                    "limited",
+                    "ltd"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "challenges": [
+    {
+      "name": "unscored-challenge",
+      "description": "",
+      "index-settings": {
+        "index.number_of_replicas": 0
+      },
+      "schedule": [
+        {
+          "operation": "index",
+          "warmup-time-period": 120,
+          "clients": 8
+        },
+        {
+          "operation": "force-merge",
+          "clients": 1
+        },
+        {
+          "operation": "unscored-query",
+          "clients": 8,
+          "warmup-iterations": 10000,
+          "iterations": 10000,
+          "target-throughput": 100
+        }
+      ]
+    },
+    {
+      "name": "scored-challenge",
+      "description": "",
+      "index-settings": {
+        "index.number_of_replicas": 0
+      },
+      "schedule": [
+        {
+          "operation": "index",
+          "warmup-time-period": 120,
+          "clients": 8
+        },
+        {
+          "operation": "force-merge",
+          "clients": 1
+        },
+        {
+          "operation": "scored-query",
+          "clients": 8,
+          "warmup-iterations": 10000,
+          "iterations": 10000,
+          "target-throughput": 100
+        }
+      ]
+    }
+  ]
+}

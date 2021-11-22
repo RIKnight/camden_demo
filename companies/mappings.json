@@ -1,0 +1,46 @@
+{
+  "company": {
+    "dynamic": "strict",
+    "_all": {
+      "enabled": false
+    },
+    "properties": {
+      "id": {
+        "type": "text"
+      },
+      "company_name": {
+        "type": "text"
+      },
+      "company_number": {
+        "type": "text"
+      },
+      "care_of": {
+        "type": "text"
+      },
+      "po_box": {
+        "type": "text"
+      },
+      "address_line_1": {
+        "type": "text"
+      },
+      "address_line_2": {
+        "type": "text"
+      },
+      "town": {
+        "type": "text"
+      },
+      "county": {
+        "type": "text"
+      },
+      "country": {
+        "type": "text"
+      },
+      "postcode": {
+        "type": "text"
+      },
+      "company_category": {
+        "type": "text"
+      }
+    }
+  }
+}
