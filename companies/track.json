@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "meta": {
     "short-description": "Benchmarking scored/unscored queries",
     "description": "Benchmarking scored/unscored queries",
@@ -7,22 +8,32 @@
   "indices": [
     {
       "name": "companies",
-      "types": [
+      "body": "index.json"
+    }
+  ],
+  "corpora": [
+    {
+      "name": "companies",
+      "documents": [
         {
-          "name": "company",
-          "mapping": "mappings.json",
-          "documents": "documents.json.bz2",
-          "document-count": 484122,
-          "compressed-bytes": 154133271,
-          "uncompressed-bytes": 11385383
+          "source-file": "documents.json.bz2",
+          "document-count": 484121,
+          "uncompressed-bytes": 154133271,
+          "compressed-bytes": 11385383,
+          "target-index": "companies"
         }
       ]
     }
   ],
   "operations": [
     {
-      "name": "index",
-      "operation-type": "index",
+      "name": "create-index",
+      "operation-type": "create-index"
+    },
+    {
+      "name": "bulk-index",
+      "operation-type": "bulk",
+      "corpora": "companies",
       "bulk-size": 5613
     },
     {
@@ -77,13 +88,17 @@
   "challenges": [
     {
       "name": "unscored-challenge",
+      "default": true,
       "description": "",
       "index-settings": {
         "index.number_of_replicas": 0
       },
       "schedule": [
         {
-          "operation": "index",
+          "operation": "create-index"
+        },
+        {
+          "operation": "bulk-index",
           "warmup-time-period": 120,
           "clients": 8
         },
@@ -102,13 +117,17 @@
     },
     {
       "name": "scored-challenge",
+      "default": false,
       "description": "",
       "index-settings": {
         "index.number_of_replicas": 0
       },
       "schedule": [
         {
-          "operation": "index",
+          "operation": "create-index"
+        },
+        {
+          "operation": "bulk-index",
           "warmup-time-period": 120,
           "clients": 8
         },

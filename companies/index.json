@@ -1,9 +1,9 @@
 {
-  "company": {
+  "settings": {
+    "index.number_of_replicas": 0
+  },
+  "mappings": {
     "dynamic": "strict",
-    "_all": {
-      "enabled": false
-    },
     "properties": {
       "id": {
         "type": "text"
